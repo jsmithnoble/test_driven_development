@@ -17,26 +17,27 @@ class NewVisitorTest(unittest.TestCase):
 
         # She notices To-Do in the title
         self.assertIn('To-Do', self.browser.title)
-        header_text = self.browser.find_element_by_id('h1').header_text
+        header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('To-Do', header_text)
 
         # She is invited to enter a to-do item strait away
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        input_box = self.browser.find_element_by_id('id_new_item')
         self.assertEqual(
-            inputbox.get_attribute('placeholder'),
+            input_box.get_attribute('placeholder'),
             'Enter a to-do item'
         )
 
         # She types buy llama wool into a text box
         input_box.send_keys("Buy llama wool")
         # When she hits enter, the page updates. and now the page lists "1: But llama wool" as an item in a to-do list
-        inputbox.send_keys(Keys.ENTER)
+        input_box.send_keys(Keys.ENTER)
         time.sleep(1)
 
         table = self.browser.find_element_by_id("id_list_table")
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
-            any(row.text == '1: Buy llama wool' for row in rows)
+            any(row.text == '1: Buy llama wool' for row in rows),
+            "No new to-do item in table"
         )
 
         # There is still a text box inviting her to add another item.  She enters use llama wool to make a mitten.
