@@ -32,18 +32,18 @@ class NewVisitorTest(unittest.TestCase):
         # When she hits enter, the page updates. and now the page lists "1: But llama wool" as an item in a to-do list
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
+        # There is still a text box inviting her to add another item.  She enters use llama wool to make a mitten.
+        input_box = self.browser.find_element_by_id('id_new_item')
+        input_box.send_keys("Use llama wool to make a mitten")
+        input_box.send_keys(Keys.ENTER)
+        time.sleep(1)
 
+        # The page updates again and now shows both items on her lists
         table = self.browser.find_element_by_id("id_list_table")
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Buy llama wool' for row in rows),
-            "No new to-do item in table"
-        )
-
-        # There is still a text box inviting her to add another item.  She enters use llama wool to make a mitten.
+        self.assertIn('1: Buy llama wool', [row.text for row in rows])
+        self.assertIn('2: Use llama wool to make a mitten', [row.text for row in rows])
         self.fail("Finish the test!")
-        # The page updates again and now shows both items on her lists
-
         # Melanie wonders whether the site will remember her list.  Then she sees that the site has generated a unique url for her -- there is some explanatory text to that effect.
 
         # She visits that URL her to-do list is still There
